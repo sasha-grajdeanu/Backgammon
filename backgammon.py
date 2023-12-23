@@ -92,6 +92,9 @@ class Backgammon:
         return list_of_possible_movement
 
     def move_piece(self, player, list_of_possible_movement: dict, begin, finish):
+
+        """method for move a piece in table"""
+
         if begin < 0 or finish < 0:
             print("Illegal move")
             return False
