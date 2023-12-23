@@ -54,30 +54,43 @@ class Backgammon:
         if player == self.black:
             for i in range(len(self.tabla)):
                 if self.tabla[i] < 0:  # means there are black pieces on that position
-                    possible_move_one = i + dices_1
-                    possible_move_two = i + dices_2
-                    possible_move_three = i + dices_1 + dices_2
-                    list_of_movement = [possible_move_one, possible_move_two, possible_move_three]
+                    list_of_movement = list()
+                    if dices_1 != dices_2:
+                        list_of_movement.append(i + dices_1)
+                        list_of_movement.append(i + dices_2)
+                        list_of_movement.append(i + dices_1 + dices_2)
+                    else:  # dubla
+                        list_of_movement.append(i + dices_1)
+                        list_of_movement.append(i + 2 * dices_1)
+                        list_of_movement.append(i + 3 * dices_1)
+                        list_of_movement.append(i + 4 * dices_1)
                     for element in list_of_movement:
                         if element > 23:
-                            continue # aici putem zice ca ar putea fi scoasa din tabla
+                            continue  # aici putem zice ca ar putea fi scoasa din tabla
                         if self.tabla[element] > 1:  # romanian : este poarta in casa facuta de adversar
                             list_of_movement.remove(element)
                     list_of_possible_movement[i] = list_of_movement
         if player == self.white:
             for i in range(len(self.tabla)):
                 if self.tabla[i] > 0:  # means there are white pieces on that position
-                    possible_move_one = i - dices_1
-                    possible_move_two = i - dices_2
-                    possible_move_three = i - dices_1 - dices_2
-                    list_of_movement = [possible_move_one, possible_move_two, possible_move_three]
+                    list_of_movement = list()
+                    if dices_1 != dices_2:
+                        list_of_movement.append(i - dices_1)
+                        list_of_movement.append(i - dices_2)
+                        list_of_movement.append(i - dices_1 - dices_2)
+                    else:  # dubla
+                        list_of_movement.append(i - dices_1)
+                        list_of_movement.append(i - 2 * dices_1)
+                        list_of_movement.append(i - 3 * dices_1)
+                        list_of_movement.append(i - 4 * dices_1)
                     for element in list_of_movement:
                         if element < 0:
-                            continue # aici putem zice ca ar putea fi scoasa din tabla
+                            continue  # aici putem zice ca ar putea fi scoasa din tabla
                         if self.tabla[element] < -1:  # romanian : este poarta in casa facuta de adversar
                             list_of_movement.remove(element)
                     list_of_possible_movement[i] = list_of_movement
         return list_of_possible_movement
+
     def __str__(self):
 
         """overwriting __str__ method, adapt for my class"""
@@ -98,7 +111,7 @@ def main():
     x, y = game.dices()
     print(x, y)
     print(game.decides_who_start())
-    print(game.availble_moves(1, x, y))
+    print(game.availble_moves(1, 1, 1))
 
 
 if __name__ == "__main__":
