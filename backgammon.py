@@ -91,6 +91,26 @@ class Backgammon:
                     list_of_possible_movement[i] = list_of_movement
         return list_of_possible_movement
 
+    def move_piece(self, player, list_of_possible_movement: dict, begin, finish):
+        if begin < 0 or finish < 0:
+            print("Illegal move")
+            return False
+        elif begin not in list_of_possible_movement.keys():
+            print("Illegal move")
+            return False
+        elif finish not in list_of_possible_movement[begin]:
+            print("Illegal move")
+            return False
+        else:
+            if player == self.white:
+                self.tabla[begin] -= 1
+                self.tabla[finish] += 1
+            if player == self.black:
+                self.tabla[begin] += 1
+                self.tabla[finish] -= 1
+            print(self)
+            return True
+
     def __str__(self):
 
         """overwriting __str__ method, adapt for my class"""
@@ -111,7 +131,10 @@ def main():
     x, y = game.dices()
     print(x, y)
     print(game.decides_who_start())
-    print(game.availble_moves(1, 1, 1))
+    s = game.availble_moves(1, 3, 3)
+    print(s)
+    print(list(s.keys()))
+    print(game.move_piece(1, s, 5, 2))
 
 
 if __name__ == "__main__":
