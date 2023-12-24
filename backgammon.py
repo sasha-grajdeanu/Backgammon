@@ -120,28 +120,67 @@ class Backgammon:
                     list_of_possible_movement[i] = list_of_movement
         return list_of_possible_movement
 
-    def move_piece(self, player, list_of_possible_movement: dict, begin, finish):
+    def move_piece(self, player: int, list_of_possible_movement: dict, begin: int, finish: int):
 
         """method for move a piece in table"""
 
         if begin < 0 or finish < -1:
-            print("Illegal move")
+            print("Illegal move: nu esti zdravan la cap")
             return False
         elif begin not in list_of_possible_movement.keys():
-            print("Illegal move")
+            print("Illegal move, nu ai piese acolo")
             return False
         elif finish not in list_of_possible_movement[begin]:
-            print("Illegal move")
+            print("Illegal move: nu poti muta acolo")
+            return False
+        elif not self.can_remove_piece(player) and finish == -1:
+            print("Illegal move: nu ai toate piesele in casa ta")
             return False
         else:
             if player == self.white:
-                self.tabla[begin] -= 1
-                self.tabla[finish] += 1
+                if finish == -1:
+                    self.tabla[begin] -= 1
+                    self.white_set += 1
+                    return True
+                else:
+                    self.tabla[begin] -= 1
+                    self.tabla[finish] += 1
+                    return begin - finish
             if player == self.black:
-                self.tabla[begin] += 1
-                self.tabla[finish] -= 1
+                if finish == -1:
+                    self.tabla[begin] += 1
+                    self.black_set += 1
+                    return True
+                else:
+                    self.tabla[begin] += 1
+                    self.tabla[finish] -= 1
+                    return finish - begin
             print(self)
-            return True
+
+    def move_player(self, player):
+        dice_1, dice_2 = self.dices()
+        if dice_1 == dice_2:
+            sum = 4 * dice_1
+        else:
+            sum = dice_1 + dice_2
+        if player == self.white:
+            pos_moves = self.availble_moves(player, dice_1, dice_2)
+            print(pos_moves)
+            while sum != 0:
+                # aici trebuie sa luam mai multe cazuri (like e scoasa o piesa etc)
+                """
+                    Deci, trebuie tratat urmatoarele cazuri:
+                        1. daca o piesa este scoasa intr-o runda anterioara si trebuie pusa
+                        2. cand scoate afara o piesa de a lui
+                        3. cand scoate afara o piesa de a adversarului
+                        4. cand muta normal
+                        5. daca nu sunt mutari posibile
+                """
+                position = int(input("what piece would you like to move"))
+                finish = int(input("where would you like to move"))
+                result = self.move_piece(player, position, finish)
+                if result != False:
+                    pass
 
     def __str__(self):
 
@@ -167,7 +206,6 @@ def main():
     print(s)
     print(list(s.keys()))
     print(game.move_piece(1, s, 5, 2))
-    
 
 
 if __name__ == "__main__":
