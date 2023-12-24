@@ -1,4 +1,5 @@
 import random
+from copy import deepcopy
 
 
 class Backgammon:
@@ -46,6 +47,19 @@ class Backgammon:
             if dice_1 > dice_2:
                 return False  # white start
 
+    def can_remove_piece(self, player):
+
+        """method to check if a player can remove pieces """
+
+        if player == self.white:
+            if sum(self.tabla[:6]) == 15:
+                return True
+            return False
+        if player == self.black:
+            if sum(self.tabla[18:]) == -15:
+                return True
+            return False
+
     def availble_moves(self, player, dices_1, dices_2):
 
         """method for calculate possible movement of player"""
@@ -64,11 +78,18 @@ class Backgammon:
                         list_of_movement.append(i + 2 * dices_1)
                         list_of_movement.append(i + 3 * dices_1)
                         list_of_movement.append(i + 4 * dices_1)
-                    for element in list_of_movement:
+                    flag = False
+                    for element in deepcopy(list_of_movement):
+                        print(element)
                         if element > 23:
-                            continue  # aici putem zice ca ar putea fi scoasa din tabla
-                        if self.tabla[element] > 1:  # romanian : este poarta in casa facuta de adversar
+                            print(element)
+                            flag = True
                             list_of_movement.remove(element)
+                            # aici putem zice ca ar putea fi scoasa din tabla
+                        elif self.tabla[element] > 1:  # romanian : este poarta in casa facuta de adversar
+                            list_of_movement.remove(element)
+                    if flag:
+                        list_of_movement.append(-1)
                     list_of_possible_movement[i] = list_of_movement
         if player == self.white:
             for i in range(len(self.tabla)):
@@ -83,11 +104,19 @@ class Backgammon:
                         list_of_movement.append(i - 2 * dices_1)
                         list_of_movement.append(i - 3 * dices_1)
                         list_of_movement.append(i - 4 * dices_1)
-                    for element in list_of_movement:
+                    flag = False
+
+                    for element in deepcopy(list_of_movement):
                         if element < 0:
-                            continue  # aici putem zice ca ar putea fi scoasa din tabla
-                        if self.tabla[element] < -1:  # romanian : este poarta in casa facuta de adversar
+                            print(element)
+                            print("hey")
+                            flag = True
                             list_of_movement.remove(element)
+                            # aici putem zice ca ar putea fi scoasa din tabla
+                        elif self.tabla[element] < -1:  # romanian : este poarta in casa facuta de adversar
+                            list_of_movement.remove(element)
+                    if flag:
+                        list_of_movement.append(-1)
                     list_of_possible_movement[i] = list_of_movement
         return list_of_possible_movement
 
@@ -95,7 +124,7 @@ class Backgammon:
 
         """method for move a piece in table"""
 
-        if begin < 0 or finish < 0:
+        if begin < 0 or finish < -1:
             print("Illegal move")
             return False
         elif begin not in list_of_possible_movement.keys():
@@ -138,6 +167,7 @@ def main():
     print(s)
     print(list(s.keys()))
     print(game.move_piece(1, s, 5, 2))
+    
 
 
 if __name__ == "__main__":
