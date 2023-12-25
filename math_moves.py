@@ -59,3 +59,16 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
                     list_of_movement.append(-1)
                 list_of_possible_moves[i] = list_of_movement
     return list_of_possible_moves
+
+
+def where_can_place_piece(situation: backgammon.Backgammon, player):
+    list_of_possible_place = list()
+    if player == situation.white:
+        for i in range(18, 24):
+            if situation.tabla[i] >= -1:
+                list_of_possible_place.append(i)
+    if player == situation.black:
+        for i in range(0, 6):
+            if situation.tabla[i] <= 1:
+                list_of_possible_place.append(i)
+    return list_of_possible_place
