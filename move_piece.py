@@ -33,3 +33,20 @@ def move_piece(situation: backgammon.Backgammon, player, list_of_possible_moves:
                 situation.tabla[begin] += 1
                 situation.tabla[finish] -= 1
                 return finish - begin
+
+def move_piece_on_table(situation: backgammon.Backgammon, player, list_of_possible_move, finish):
+    if finish < 0:
+        print("Illegal move: nu esti zdravan la cap")
+        return False
+    elif finish not in list_of_possible_move.keys():
+        print("Illegal move, nu poti pune acolo")
+        return False
+    else:
+        if player == situation.white:
+            situation.tabla[finish] += 1
+            situation.remove_white -= 1
+            return finish
+        if player == situation.black:
+            situation.tabla[finish] -= 1
+            situation.remove_white -= 1
+            return finish
