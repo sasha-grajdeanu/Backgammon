@@ -61,14 +61,22 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
     return list_of_possible_moves
 
 
-def where_can_place_piece(situation: backgammon.Backgammon, player):
+def where_can_place_piece(situation: backgammon.Backgammon, player, dice_1, dice_2):
     list_of_possible_place = list()
     if player == situation.white:
-        for i in range(18, 24):
-            if situation.tabla[i] >= -1:
-                list_of_possible_place.append(i)
+        list_of_possible_place.append(24 - dice_1)
+        list_of_possible_place.append(24 - dice_2)
+        for elem in deepcopy(list_of_possible_place):
+            if elem == 24:
+                list_of_possible_place.remove(elem)
+            elif situation.tabla[elem] < -1:
+                list_of_possible_place.remove(elem)
     if player == situation.black:
-        for i in range(0, 6):
-            if situation.tabla[i] <= 1:
-                list_of_possible_place.append(i)
+        list_of_possible_place.append(-1 + dice_1)
+        list_of_possible_place.append(-1 + dice_2)
+        for elem in deepcopy(list_of_possible_place):
+            if elem == 0:
+                list_of_possible_place.remove(elem)
+            elif situation.tabla[elem] > 1:
+                list_of_possible_place.remove(elem)
     return list_of_possible_place
