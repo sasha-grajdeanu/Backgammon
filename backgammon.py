@@ -36,12 +36,15 @@ class Backgammon:
     def can_remove_piece(self, player):
 
         """method to check if a player can remove pieces """
-
         if player == self.white:
+            if self.white_set > 0:
+                return True
             if sum(self.tabla[:6]) == 15:
                 return True
             return False
         if player == self.black:
+            if self.black_set > 0:
+                return True
             if sum(self.tabla[18:]) == -15:
                 return True
             return False
