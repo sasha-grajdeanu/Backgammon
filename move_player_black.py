@@ -48,10 +48,49 @@ def move_black(sit: bk.Backgammon):
                             else:
                                 dice_2 = 0
                     else:
-                        #dubla
+                        # dubla
                         sum -= (result // dice_1)
                     print("=================")
         else:
-            break
-
+            # mutare normala
+            print(list_of_possible_move)
+            position = int(input("linia de unde muti "))
+            finish = int(input("linia la care pui "))
+            print("decizie", finish)
+            result = move_piece.move_piece(sit, sit.black, list_of_possible_move, position, finish)
+            print("res", result)
+            if result == False:
+                print("Nu merge")
+            else:
+                if dice_1 != dice_2:
+                    if finish != -1:
+                        if result == dice_1:
+                            dice_1 = 0
+                            sum -= 1
+                        elif result == dice_2:
+                            dice_2 = 0
+                            sum -= 1
+                        elif result == dice_1 + dice_2:
+                            sum = 0
+                        else:
+                            print("WTF")
+                    else:
+                        if result == dice_1:
+                            dice_1 = 0
+                            sum -= 1
+                        elif result == dice_2:
+                            dice_2 = 0
+                            sum -= 1
+                        elif result == dice_1 + dice_2:
+                            sum = 0
+                        else:
+                            x = min(dice_1, dice_2)
+                            sum -= 1
+                            if x == dice_1:
+                                dice_1 = 0
+                            else:
+                                dice_2 = 0
+                else:
+                    if finish != -1:
+                        sum -= (result // dice_1)
     print("CAP de finish")
