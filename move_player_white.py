@@ -34,7 +34,7 @@ def move_white(sit: bk.Backgammon):
                 print("decizie", finish)
                 result = move_piece.move_piece_on_table(sit, sit.white, list_of_possible_move_on_adversary, finish)
                 print("res", result)
-                if result == False:
+                if isinstance(result, bool):
                     print("Nu merge")
                 else:
                     if dice_1 != dice_2:
@@ -91,6 +91,5 @@ def move_white(sit: bk.Backgammon):
                             else:
                                 dice_2 = 0
                 else:
-                    if finish != -1:
-                        sum -= (result // dice_1)
+                    sum -= (result // dice_1)
     print("CAP de finish")
