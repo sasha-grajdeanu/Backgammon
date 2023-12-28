@@ -13,19 +13,24 @@ def main():
     # print(game)
     # print(fortune.dices())
 
+    # print(game)
+    game.tabla[23] = 0
+    game.tabla[12] = 0
+    game.tabla[7] = 0
+
+    game.tabla[5] = 1
+    game.tabla[4] = 1
+    game.tabla[3] = 2
+    game.tabla[2] = 1
+    game.tabla[1] = 5
+    game.tabla[0] = 5
+
     print(game)
-    game.tabla[0] = 0
-    game.tabla[11] = 0
-    game.tabla[16] = 0
 
-    game.tabla[18] = 0
-    game.tabla[19] = 0
-    game.tabla[20] = -3
-    game.tabla[21] = -5
-    game.tabla[22] = -2
-    game.tabla[23] = -5
-
-    move_player_black.move_black(game)
+    print(math_moves.available_move(game, game.white, 5, 5, 4))
+    # move_player_black.move_black(game)
+    # for i in range(0, 6).__reversed__():
+    #     print(i)
 
     print(game)
 

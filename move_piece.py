@@ -67,3 +67,4 @@ def move_piece_on_table(situation: backgammon.Backgammon, player, list_of_possib
             situation.tabla[finish] -= 1
             situation.remove_black -= 1
             return finish % 6 + 1
+
