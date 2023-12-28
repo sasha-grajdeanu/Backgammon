@@ -6,7 +6,17 @@ import backgammon
 def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, double=None):
     list_of_possible_moves = dict()
     if player == situation.black:
+        if situation.can_remove_piece(situation.black):
+            for i in range(0, 6):
+                # print("hey")
+                if 24 - i == dice_1 and situation.tabla[i] >= 0:
+                    dice_1 -= 1
+                if 24 - i == dice_2 and situation.tabla[i] >= 0:
+                    dice_2 -= 1
+                else:
+                    break
         for i in range(len(situation.tabla)):
+            print(dice_1, dice_2)
             if situation.tabla[i] < 0:
                 list_of_movement = set()
                 if dice_1 != dice_2:
@@ -23,16 +33,36 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
                 flag = False
                 list_of_movement = list(list_of_movement)
                 for element in deepcopy(list_of_movement):
-                    if element > 23:
-                        flag = True
-                        list_of_movement.remove(element)
-                    elif situation.tabla[element] > 1:
-                        list_of_movement.remove(element)
+                    if situation.can_remove_piece(situation.black):
+                        if element > 24:
+                            list_of_movement.remove(element)
+                            # flag = True
+                        elif element == 24:
+                            list_of_movement.remove(element)
+                            flag = True
+                        elif situation.tabla[element] > 1:
+                            list_of_movement.remove(element)
+                    else:
+                        if element > 23:
+                            flag = True
+                            list_of_movement.remove(element)
+                        elif situation.tabla[element] > 1:
+                            list_of_movement.remove(element)
                 if flag:
                     list_of_movement.append(-1)
                 list_of_possible_moves[i] = list_of_movement
     if player == situation.white:
-        for i in range(len(situation.tabla)):
+        if situation.can_remove_piece(situation.white):
+            for i in range(0, 6):
+                print("hey")
+                if i + 1 == dice_1 and situation.tabla[i] <= 0:
+                    dice_1 -= 1
+                if i + 1 == dice_2 and situation.tabla[i] <= 0:
+                    dice_2 -= 1
+                else:
+                    break
+        for i in range(len(situation.tabla)).__reversed__():
+            print(dice_1, dice_2)
             if situation.tabla[i] > 0:
                 list_of_movement = set()
                 if dice_1 != dice_2:
@@ -50,11 +80,21 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
                 flag = False
                 list_of_movement = list(list_of_movement)
                 for element in deepcopy(list_of_movement):
-                    if element < 0:
-                        flag = True
-                        list_of_movement.remove(element)
-                    elif situation.tabla[element] < -1:
-                        list_of_movement.remove(element)
+                    if situation.can_remove_piece(situation.white):
+                        if element < -1:
+                            list_of_movement.remove(element)
+                            # flag = True
+                        elif element == -1:
+                            list_of_movement.remove(element)
+                            flag = True
+                        elif situation.tabla[element] < -1:
+                            list_of_movement.remove(element)
+                    else:
+                        if element > 0:
+                            flag = True
+                            list_of_movement.remove(element)
+                        elif situation.tabla[element] > -1:
+                            list_of_movement.remove(element)
                 if flag:
                     list_of_movement.append(-1)
                 list_of_possible_moves[i] = list_of_movement
