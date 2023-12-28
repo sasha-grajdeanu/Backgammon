@@ -7,13 +7,13 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
     list_of_possible_moves = dict()
     if player == situation.black:
         if situation.can_remove_piece(situation.black):
-            for i in range(0, 6):
+            for i in range(0, max(dice_1, dice_2) + 1).__reversed__():
                 # print("hey")
                 if 24 - i == dice_1 and situation.tabla[i] >= 0:
                     dice_1 -= 1
                 if 24 - i == dice_2 and situation.tabla[i] >= 0:
                     dice_2 -= 1
-                else:
+                if situation.tabla[i] > 0:
                     break
         for i in range(len(situation.tabla)):
             print(dice_1, dice_2)
@@ -53,14 +53,15 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
                 list_of_possible_moves[i] = list_of_movement
     if player == situation.white:
         if situation.can_remove_piece(situation.white):
-            for i in range(0, 6):
-                print("hey")
+            for i in range(0, max(dice_1, dice_2) + 1).__reversed__():
+                print("hey", i)
                 if i + 1 == dice_1 and situation.tabla[i] <= 0:
                     dice_1 -= 1
                 if i + 1 == dice_2 and situation.tabla[i] <= 0:
                     dice_2 -= 1
-                else:
+                if situation.tabla[i] > 0:
                     break
+
         for i in range(len(situation.tabla)).__reversed__():
             print(dice_1, dice_2)
             if situation.tabla[i] > 0:
