@@ -19,7 +19,7 @@ def move_piece(situation: backgammon.Backgammon, player, list_of_possible_moves:
             if finish == -1:
                 situation.tabla[begin] -= 1
                 situation.white_set += 1
-                return begin
+                return begin + 1
             elif situation.tabla[finish] == -1:
                 situation.remove_black += 1
                 situation.tabla[begin] -= 1
