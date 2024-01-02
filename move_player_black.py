@@ -101,4 +101,6 @@ def move_black(sit: bk.Backgammon):
                                     dice_2 = 0
                     else:
                         sum -= (result // dice_1)
+        else:
+            break
         # print("CAP de finish")
