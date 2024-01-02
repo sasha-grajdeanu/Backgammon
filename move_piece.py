@@ -6,7 +6,7 @@ def move_piece(situation: backgammon.Backgammon, player, list_of_possible_moves:
         print("Illegal move: nu esti zdravan la cap")
         return False
     elif begin not in list_of_possible_moves.keys():
-        print("Illegal move, nu ai piese acolo")
+        print("Illegal move, nu ai cum")
         return False
     elif finish not in list_of_possible_moves[begin]:
         print("Illegal move: nu poti muta acolo")
