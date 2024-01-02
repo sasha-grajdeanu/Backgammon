@@ -13,7 +13,7 @@ def game():
     else:
         turn = 1
     while True:
-        print(game)
+        # print(game)
         if game.win_what() == 1:
             print("White win")
             break
