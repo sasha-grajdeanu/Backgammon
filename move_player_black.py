@@ -14,6 +14,7 @@ def move_black(sit: bk.Backgammon):
 
     while sum != 0:
         print("sum", sum)
+        print(sit)
         if dice_1 != dice_2:
             list_of_possible_move = math_moves.available_move(sit, sit.black, dice_1, dice_2)
         else:
@@ -30,7 +31,14 @@ def move_black(sit: bk.Backgammon):
                 print("BLOCAJ 2")
                 return -1
             else:
-                finish = int(input("linia unde pui piesa "))
+                while True:
+                    try:
+                        finish = int(input("linia unde pui piesa "))
+                    except ValueError:
+                        print("NOT INTEGER")
+                        continue
+                    else:
+                        break
                 # print("decizie", finish)
                 result = move_piece.move_piece_on_table(sit, sit.black, list_of_possible_move_on_adversary, finish)
                 # print("res", result)
@@ -39,14 +47,11 @@ def move_black(sit: bk.Backgammon):
                 else:
                     if dice_1 != dice_2:
                         # normal
-                        if result == dice_1 + dice_2:
-                            sum = 0
+                        sum -= 1
+                        if result == dice_1:
+                            dice_1 = 0
                         else:
-                            sum -= 1
-                            if result == dice_1:
-                                dice_1 = 0
-                            else:
-                                dice_2 = 0
+                            dice_2 = 0
                     else:
                         # dubla
                         sum -= (result // dice_1)
@@ -54,12 +59,19 @@ def move_black(sit: bk.Backgammon):
         else:
             # mutare normala
             print(list_of_possible_move)
-            position = int(input("linia de unde muti "))
-            finish = int(input("linia la care pui "))
-            print("decizie", finish)
+            while True:
+                try:
+                    position = int(input("linia de unde muti "))
+                    finish = int(input("linia la care pui "))
+                except ValueError:
+                    print("NOT INTEGER")
+                    continue
+                else:
+                    break
+            # print("decizie", finish)
             result = move_piece.move_piece(sit, sit.black, list_of_possible_move, position, finish)
             # print("res", result)
-            if result == False:
+            if isinstance(result, bool):
                 print("Nu merge")
             else:
                 if dice_1 != dice_2:
@@ -70,8 +82,6 @@ def move_black(sit: bk.Backgammon):
                         elif result == dice_2:
                             dice_2 = 0
                             sum -= 1
-                        elif result == dice_1 + dice_2:
-                            sum = 0
                         else:
                             print("WTF")
                     else:
@@ -81,10 +91,8 @@ def move_black(sit: bk.Backgammon):
                         elif result == dice_2:
                             dice_2 = 0
                             sum -= 1
-                        elif result == dice_1 + dice_2:
-                            sum = 0
                         else:
-                            x = min(dice_1, dice_2)
+                            x = max(dice_1, dice_2)
                             sum -= 1
                             if x == dice_1:
                                 dice_1 = 0
@@ -92,4 +100,4 @@ def move_black(sit: bk.Backgammon):
                                 dice_2 = 0
                 else:
                     sum -= (result // dice_1)
-    print("CAP de finish")
+    # print("CAP de finish")
