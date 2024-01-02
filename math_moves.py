@@ -16,10 +16,10 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
                 if situation.tabla[i] > 0:
                     break
         for i in range(len(situation.tabla)):
-            print(dice_1, dice_2)
+            # print(dice_1, dice_2)
             if situation.tabla[i] < 0:
                 list_of_movement = set()
-                if dice_1 != dice_2:
+                if double is None:
                     list_of_movement.add(i + dice_1)
                     list_of_movement.add(i + dice_2)
                     list_of_movement.add(i + dice_1 + dice_2)
@@ -44,7 +44,6 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
                             list_of_movement.remove(element)
                     else:
                         if element > 23:
-                            flag = True
                             list_of_movement.remove(element)
                         elif situation.tabla[element] > 1:
                             list_of_movement.remove(element)
@@ -54,7 +53,7 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
     if player == situation.white:
         if situation.can_remove_piece(situation.white):
             for i in range(0, max(dice_1, dice_2) + 1).__reversed__():
-                print("hey", i)
+                # print("hey", i)
                 if i + 1 == dice_1 and situation.tabla[i] <= 0:
                     dice_1 -= 1
                 if i + 1 == dice_2 and situation.tabla[i] <= 0:
@@ -63,18 +62,16 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
                     break
 
         for i in range(len(situation.tabla)).__reversed__():
-            print(dice_1, dice_2)
+            # print(dice_1, dice_2)
             if situation.tabla[i] > 0:
                 list_of_movement = set()
-                if dice_1 != dice_2:
+                if double is None:
                     list_of_movement.add(i - dice_1)
                     list_of_movement.add(i - dice_2)
                     list_of_movement.add(i - dice_1 - dice_2)
                     if i in list_of_movement:
                         list_of_movement.remove(i)
                 else:
-                    if double is None:
-                        return list_of_possible_moves
                     for j in range(double):
                         list_of_movement.add(i - (j + 1) * dice_1)
 
@@ -91,10 +88,9 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
                         elif situation.tabla[element] < -1:
                             list_of_movement.remove(element)
                     else:
-                        if element > 0:
-                            flag = True
+                        if element < 0:
                             list_of_movement.remove(element)
-                        elif situation.tabla[element] > -1:
+                        elif situation.tabla[element] < -1:
                             list_of_movement.remove(element)
                 if flag:
                     list_of_movement.append(-1)
