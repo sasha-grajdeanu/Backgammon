@@ -51,3 +51,12 @@ class Backgammon:
             if self.remove_black != 0:
                 return False
             return True
+
+
+    def win_what(self):
+        if self.white_set == 15:
+            return 1
+        if self.black_set == 15:
+            return -1
+        else:
+            return False

@@ -6,7 +6,7 @@ import move_piece
 
 def move_white(sit: bk.Backgammon):
     dice_1, dice_2 = frt.dices()
-    print(dice_1, dice_2)
+    print("zaruri date", dice_1, dice_2)
     if dice_1 != dice_2:
         sum = 2
     else:
@@ -31,9 +31,9 @@ def move_white(sit: bk.Backgammon):
                 return -1
             else:
                 finish = int(input("linia unde pui piesa "))
-                print("decizie", finish)
+                # print("decizie", finish)
                 result = move_piece.move_piece_on_table(sit, sit.white, list_of_possible_move_on_adversary, finish)
-                print("res", result)
+                # print("res", result)
                 if isinstance(result, bool):
                     print("Nu merge")
                 else:
@@ -56,9 +56,9 @@ def move_white(sit: bk.Backgammon):
             print(list_of_possible_move)
             position = int(input("linia de unde muti "))
             finish = int(input("linia la care pui "))
-            print("decizie", finish)
+            # print("decizie", finish)
             result = move_piece.move_piece(sit, sit.white, list_of_possible_move, position, finish)
-            print("res", result)
+            # print("res", result)
             if result == False:
                 print("Nu merge")
             else:
@@ -92,4 +92,4 @@ def move_white(sit: bk.Backgammon):
                                 dice_2 = 0
                 else:
                     sum -= (result // dice_1)
-    print("CAP de finish")
+    # print("CAP de finish")
