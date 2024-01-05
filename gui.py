@@ -161,7 +161,7 @@ class GUI:
 
     def build_info_label(self):
         string_info = "RETRASE ALB : " + str(self.backgammon.white_set) + "\n"
-        string_info += "RETRASE NEGRU : " + str(self.backgammon.white_set) + "\n"
+        string_info += "RETRASE NEGRU : " + str(self.backgammon.black_set) + "\n"
         string_info += "SCOASE ALB : " + str(self.backgammon.remove_white) + "\n"
         string_info += "SCOASE NEGRU : " + str(self.backgammon.remove_black)
         self.info_label = tk.Label(self.info_frame, text=string_info, font=("Press Start 2P", 14))
@@ -176,6 +176,7 @@ class GUI:
         self.turn_label.pack()
 
     def build_infrastructure(self):
+        print(self.backgammon)
         decision = self.backgammon.win_what()
         if isinstance(decision, bool):
             for widget in self.root.winfo_children():
