@@ -1,11 +1,9 @@
-import backgammon
-import game
-import move_ai_player_white
+from tui_game import game
 
 
 def main():
-    # game.game()
-    game.game_h_vs_ai()
+    game.game_h_vs_h()
+
 
 
 

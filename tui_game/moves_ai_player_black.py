@@ -1,10 +1,12 @@
-import backgammon as bk
-import fortune as frt
-import math_moves
-import move_piece
+import random
+
+from tui_game import backgammon as bk
+from tui_game import fortune as frt
+from tui_game import math_moves
+from tui_game import move_piece
 
 
-def move_white(sit: bk.Backgammon):
+def move_ai_black(sit: bk.Backgammon):
     dice_1, dice_2 = frt.dices()
     print("zaruri date", dice_1, dice_2)
     if dice_1 != dice_2:
@@ -17,31 +19,24 @@ def move_white(sit: bk.Backgammon):
             print("sum", sum)
             print(sit)
             if dice_1 != dice_2:
-                list_of_possible_move = math_moves.available_move(sit, sit.white, dice_1, dice_2)
+                list_of_possible_move = math_moves.available_move(sit, sit.black, dice_1, dice_2)
             else:
-                list_of_possible_move = math_moves.available_move(sit, sit.white, dice_1, dice_2, sum)
+                list_of_possible_move = math_moves.available_move(sit, sit.black, dice_1, dice_2, sum)
             if len(list_of_possible_move) == 0:
                 # blocaj
                 print("BLOCAJ 1")
                 return -1
-            if sit.remove_white != 0:
+            if sit.remove_black != 0:
                 # inseamna ca trebuie sa pun piesa pe tabla in casa adversarului
-                list_of_possible_move_on_adversary = math_moves.where_can_place_piece(sit, sit.white, dice_1, dice_2)
+                list_of_possible_move_on_adversary = math_moves.where_can_place_piece(sit, sit.black, dice_1, dice_2)
                 print("list", list_of_possible_move_on_adversary)
                 if len(list_of_possible_move_on_adversary) == 0:
                     print("BLOCAJ 2")
                     return -1
                 else:
-                    while True:
-                        try:
-                            finish = int(input("linia unde pui piesa "))
-                        except ValueError:
-                            print("NOT INTEGER")
-                            continue
-                        else:
-                            break
-                    # print("decizie", finish)
-                    result = move_piece.move_piece_on_table(sit, sit.white, list_of_possible_move_on_adversary, finish)
+                    finish = random.choice(list_of_possible_move_on_adversary)
+                    print("decizie", finish)
+                    result = move_piece.move_piece_on_table(sit, sit.black, list_of_possible_move_on_adversary, finish)
                     # print("res", result)
                     if isinstance(result, bool):
                         print("Nu merge")
@@ -60,17 +55,12 @@ def move_white(sit: bk.Backgammon):
             else:
                 # mutare normala
                 print(list_of_possible_move)
-                while True:
-                    try:
-                        position = int(input("linia de unde muti "))
-                        finish = int(input("linia la care pui "))
-                    except ValueError:
-                        print("NOT INTEGER")
-                        continue
-                    else:
-                        break
+                position = random.choice(list(list_of_possible_move.keys()))
+                print(position)
+                finish = random.choice(list_of_possible_move[position])
+                print(finish)
                 # print("decizie", finish)
-                result = move_piece.move_piece(sit, sit.white, list_of_possible_move, position, finish)
+                result = move_piece.move_piece(sit, sit.black, list_of_possible_move, position, finish)
                 # print("res", result)
                 if isinstance(result, bool):
                     print("Nu merge")

@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-import backgammon
+from tui_game import backgammon
 
 
 def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, double=None):

@@ -1,7 +1,7 @@
-import backgammon as bk
-import fortune as frt
-import math_moves
-import move_piece
+from tui_game import backgammon as bk
+from tui_game import fortune as frt
+from tui_game import math_moves
+from tui_game import move_piece
 
 
 def move_black(sit: bk.Backgammon):

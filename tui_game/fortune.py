@@ -5,7 +5,7 @@ def dices():
 
     dice_1 = random.randint(1, 6)
     dice_2 = random.randint(1, 6)
-    return dice_1, dice_2
+    return [dice_1, dice_2]
 
 
 def decides_who_start():

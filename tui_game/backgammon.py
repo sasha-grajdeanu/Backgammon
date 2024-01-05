@@ -22,6 +22,22 @@ class Backgammon:
         self.white = 1
         self.black = -1
 
+    def reset(self):
+        self.tabla = list(0 for i in range(24))
+        self.tabla[23] = 2
+        self.tabla[18] = -5
+        self.tabla[16] = -3
+        self.tabla[12] = 5
+        self.tabla[11] = -5
+        self.tabla[7] = 3
+        self.tabla[5] = 5
+        self.tabla[0] = -2
+        self.remove_white = 0
+        self.remove_black = 0
+        self.white_set = 0
+        self.black_set = 0
+        self.white = 1
+        self.black = -1
     def __str__(self):
 
         """overwriting __str__ method, adapt for my class"""

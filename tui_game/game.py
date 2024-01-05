@@ -1,9 +1,4 @@
-import fortune
-import backgammon
-import move_player_white
-import move_player_black
-import moves_ai_player_black
-import move_ai_player_white
+from tui_game import moves_ai_player_black, move_player_black, move_ai_player_white, backgammon, move_player_white, fortune
 
 
 def game_h_vs_h():

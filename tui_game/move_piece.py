@@ -1,4 +1,4 @@
-import backgammon
+from tui_game import backgammon
 
 
 def move_piece(situation: backgammon.Backgammon, player, list_of_possible_moves: dict, begin, finish):

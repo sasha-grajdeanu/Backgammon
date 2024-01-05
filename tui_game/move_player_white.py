@@ -1,12 +1,10 @@
-import random
-
-import backgammon as bk
-import fortune as frt
-import math_moves
-import move_piece
+from tui_game import backgammon as bk
+from tui_game import fortune as frt
+from tui_game import math_moves
+from tui_game import move_piece
 
 
-def move_ai_white(sit: bk.Backgammon):
+def move_white(sit: bk.Backgammon):
     dice_1, dice_2 = frt.dices()
     print("zaruri date", dice_1, dice_2)
     if dice_1 != dice_2:
@@ -34,8 +32,15 @@ def move_ai_white(sit: bk.Backgammon):
                     print("BLOCAJ 2")
                     return -1
                 else:
-                    finish = random.choice(list_of_possible_move_on_adversary)
-                    print("decizie", finish)
+                    while True:
+                        try:
+                            finish = int(input("linia unde pui piesa "))
+                        except ValueError:
+                            print("NOT INTEGER")
+                            continue
+                        else:
+                            break
+                    # print("decizie", finish)
                     result = move_piece.move_piece_on_table(sit, sit.white, list_of_possible_move_on_adversary, finish)
                     # print("res", result)
                     if isinstance(result, bool):
@@ -55,10 +60,15 @@ def move_ai_white(sit: bk.Backgammon):
             else:
                 # mutare normala
                 print(list_of_possible_move)
-                position = random.choice(list(list_of_possible_move.keys()))
-                print(position)
-                finish = random.choice(list_of_possible_move[position])
-                print(finish)
+                while True:
+                    try:
+                        position = int(input("linia de unde muti "))
+                        finish = int(input("linia la care pui "))
+                    except ValueError:
+                        print("NOT INTEGER")
+                        continue
+                    else:
+                        break
                 # print("decizie", finish)
                 result = move_piece.move_piece(sit, sit.white, list_of_possible_move, position, finish)
                 # print("res", result)
