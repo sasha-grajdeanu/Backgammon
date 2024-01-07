@@ -1,5 +1,6 @@
-import time
+import random
 import tkinter as tk
+from copy import deepcopy
 from tkinter import messagebox
 
 import tui_game.fortune
@@ -35,14 +36,20 @@ class GUI:
         self.take_values_button = None
         self.value_frame = None
         self.round = 0
+        self.ai_white = False
+        self.ai_black = False
+        self.information_move_ai = ""
 
     def reset_data(self):
         self.backgammon = backgammon.Backgammon()
-        self.dices = None
+        self.dices = [0, 0]
         self.must_put_white = False
         self.must_put_black = False
         self.round = 0
+        self.ai_white = False
+        self.ai_black = False
         self.tura = "NEGRU" if tui_game.fortune.decides_who_start() else "ALB"
+        self.information_move_ai = ""
 
     def create_menu(self):
         # Menu Bar
@@ -114,8 +121,11 @@ class GUI:
         self.dice_frame = tk.Frame(self.control_frame, width=400, height=100)
         self.dice_frame.pack(side=tk.TOP, pady=5)
 
+    def build_ai_info(self):
+        pass
+
     def build_insert_value(self):
-        if self.round != 0:
+        if self.round > 0:
             self.value_frame = tk.Frame(self.control_frame, width=400, height=200)
             self.value_frame.pack(side=tk.BOTTOM, pady=5)
             if (self.tura == "ALB" and not self.must_put_white) or (self.tura == "NEGRU" and not self.must_put_black):
@@ -138,6 +148,18 @@ class GUI:
             self.take_values_button = tk.Button(self.value_frame, text="Muta", command=self.take_values,
                                                 font=("Press Start 2P", 10))
             self.take_values_button.grid(row=2, column=0, columnspan=2, pady=5)
+        if self.round == -1:
+            self.value_frame = tk.Frame(self.control_frame, width=400, height=200)
+            self.value_frame.pack(side=tk.BOTTOM, pady=5)
+            self.take_values_button = tk.Button(self.value_frame, text="Confirm", command=self.confirm,
+                                                font=("Press Start 2P", 10))
+            self.take_values_button.grid(row=0, column=0, columnspan=2, pady=5)
+
+    def confirm(self):
+        self.round = 0
+        self.dices = [0, 0]
+        self.tura = "NEGRU" if self.tura == "ALB" else "ALB"
+        self.build_infrastructure()
 
     def build_roll_button(self):
         if self.round == 0:
@@ -145,13 +167,17 @@ class GUI:
                                          command=lambda: self.roll_dice(self.dice_label),
                                          font=("Press Start 2P", 14))
             self.roll_button.pack(anchor=tk.CENTER, expand=True, padx=5, pady=5)
+        elif self.round == -1:
+            self.roll_button = tk.Label(self.dice_frame, text=self.information_move_ai,
+                                        font=("Press Start 2P", 10))
+            self.roll_button.pack(anchor=tk.CENTER, expand=True, padx=5, pady=5)
         else:
             self.roll_button = tk.Label(self.dice_frame, text="MUTARI DE FACUT " + str(self.round),
                                         font=("Press Start 2P", 10))
             self.roll_button.pack(anchor=tk.CENTER, expand=True, padx=5, pady=5)
 
     def build_dice_label(self):
-        string_phrase = "NULL" if self.dices is None else str(self.dices[0]) + "  " + str(self.dices[1])
+        string_phrase = "NULL" if self.dices == [0, 0] else str(self.dices[0]) + "  " + str(self.dices[1])
         self.dice_label = tk.Label(self.dice_frame, text="ZARURI DATE = " + string_phrase, font=("Press Start 2P", 12))
         self.dice_label.pack(padx=5, pady=5)
 
@@ -202,6 +228,12 @@ class GUI:
 
     def start_human_vs_ai(self):
         self.reset_data()
+        if tui_game.fortune.decides_who_start():
+            self.ai_black = True
+            print("NEGRU AI")
+        else:
+            self.ai_white = True
+            print("ALB AI")
         self.build_infrastructure()
 
     def roll_dice(self, dice_label):
@@ -216,6 +248,9 @@ class GUI:
             self.update_dice_label(dice_label)
 
     def update_dice_label(self, dice_label):
+        player = 1 if self.tura == "ALB" else -1
+        if (player == 1 and self.ai_white) or (player == -1 and self.ai_black):
+            self.move_ai()
         self.build_infrastructure()
 
     def take_values(self):
@@ -272,8 +307,12 @@ class GUI:
                 self.tura = "NEGRU" if player == 1 else "ALB"
             if self.backgammon.remove_white == 0:
                 self.must_put_white = False
+            else:
+                self.must_put_white = True
             if self.backgammon.remove_black == 0:
                 self.must_put_black = False
+            else:
+                self.must_put_black = True
             self.build_infrastructure()
 
     def move_from_to(self, value1, value2):
@@ -316,10 +355,10 @@ class GUI:
                                 messagebox.showinfo("Informatie", "CEVA O MERS PROST")
                         else:
                             if result == self.dices[0]:
-                                dice_1 = 0
+                                self.dices[0] = 0
                                 self.round -= 1
                             elif result == self.dices[1]:
-                                dice_2 = 0
+                                self.dices[1] = 0
                                 self.round -= 1
                             else:
                                 x = max(self.dices[0], self.dices[1])
@@ -329,14 +368,108 @@ class GUI:
                                 else:
                                     self.dices[1] = 0
                     else:
-                        self.round -= (result // self.dices[1])
+                        self.round -= 1
             if self.round == 0:
                 self.tura = "NEGRU" if player == 1 else "ALB"
-            if self.backgammon.remove_white != 0:
+            if self.backgammon.remove_white == 0:
+                self.must_put_white = False
+            else:
                 self.must_put_white = True
-            if self.backgammon.remove_black != 0:
+            if self.backgammon.remove_black == 0:
+                self.must_put_black = False
+            else:
                 self.must_put_black = True
             self.build_infrastructure()
+
+    def move_ai(self):
+        dices = deepcopy(self.dices)
+        self.information_move_ai = ""
+        player = 1 if self.tura == "ALB" else -1
+        while self.round != 0:
+            if (player == 1 and self.backgammon.remove_white != 0) or (
+                    player == -1 and self.backgammon.remove_black != 0):
+                list_of_moves = tui_game.math_moves.where_can_place_piece(self.backgammon, player, dices[0], dices[1])
+                if len(list_of_moves) == 0:
+                    self.round = 0
+                    self.information_move_ai += "NU A PUTUT PUNE PIESA"
+                else:
+                    where_place = random.choice(list_of_moves)
+                    print(where_place)
+                    result = move_piece.move_piece_on_table(self.backgammon, player, list_of_moves, where_place)
+                    print("result", result)
+                    if isinstance(result, bool):
+                        print("Nu merge")
+                        break
+                    else:
+                        if dices[0] != dices[1]:
+                            # normal
+                            self.round -= 1
+                            if result == dices[0]:
+                                dices[0] = 0
+                            else:
+                                dices[1] = 0
+                        else:
+                            # dubla
+                            self.round -= 1
+                        self.information_move_ai += "PUS LA POZITIA "
+                        self.information_move_ai += str(where_place)
+                        self.information_move_ai += "\n"
+            else:
+                if dices[0] != dices[1]:
+                    list_of_moves = math_moves.available_move(self.backgammon, player, dices[0], dices[1])
+                else:
+                    list_of_moves = math_moves.available_move(self.backgammon, player, dices[0], dices[1], self.round)
+                if len(list_of_moves) == 0:
+                    self.round = 0
+                    self.information_move_ai += "NU A PUTUT PUNE PIESA"
+                else:
+                    _from = random.choice(list(list_of_moves.keys()))
+                    _to = random.choice(list_of_moves[_from])
+                    print(_from, " ", _to)
+                    result = move_piece.move_piece(self.backgammon, player, list_of_moves, _from, _to)
+                    print("result", result)
+                    if isinstance(result, bool):
+                        print("Nu merge")
+                        break
+                    else:
+                        if dices[0] != dices[1]:
+                            if _to != -1:
+                                if result == dices[0]:
+                                    dices[0] = 0
+                                    self.round -= 1
+                                elif result == dices[1]:
+                                    dices[1] = 0
+                                    self.round -= 1
+                                else:
+                                    messagebox.showinfo("Informatie", "CEVA O MERS PROST")
+                            else:
+                                if result == dices[0]:
+                                    dices[0] = 0
+                                    self.round -= 1
+                                elif result == dices[1]:
+                                    dices[1] = 0
+                                    self.round -= 1
+                                else:
+                                    x = max(dices[0], dices[1])
+                                    self.round -= 1
+                                    if x == dices[0]:
+                                        dices[0] = 0
+                                    else:
+                                        dices[1] = 0
+                        else:
+                            self.round -= 1
+                        self.information_move_ai += "MUTAT "
+                        self.information_move_ai += str(_from) + " => " + str(_to)
+                        self.information_move_ai += "\n"
+        if self.backgammon.remove_white == 0:
+            self.must_put_white = False
+        else:
+            self.must_put_white = True
+        if self.backgammon.remove_black == 0:
+            self.must_put_black = False
+        else:
+            self.must_put_black = True
+        self.round = -1
 
     def quit_game(self):
         # Add your code to handle quitting the game here
