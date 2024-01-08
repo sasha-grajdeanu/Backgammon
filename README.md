@@ -1,2 +1,5 @@
 # Backgammon
- Python project
+Author : Grăjdeanu C. Alexandru-Cristian
+Year: III
+Group: B2
+
