@@ -3,13 +3,16 @@ import tkinter as tk
 from copy import deepcopy
 from tkinter import messagebox
 
-import tui_game.fortune
-from tui_game import backgammon, move_piece
-from tui_game import math_moves
+import logic_of_game.fortune
+from logic_of_game import backgammon, math_moves, move_piece
 
 
 class GUI:
-    def __init__(self, root):
+    def __init__(self, main_window):
+        """
+        Initializes the Graphic User Interface and additional variables
+        :param main_window: tkinter window
+        """
         self.backgammon_frame = None
         self.control_frame = None
         self.dice_frame = None
@@ -21,9 +24,9 @@ class GUI:
         self.turn_label = None
         self.table_canvas = None
         self.backgammon = backgammon.Backgammon()
-        self.root = root
-        self.root.title("Backgammon")
-        self.root.geometry("1000x600")
+        self.main_window = main_window
+        self.main_window.title("Backgammon")
+        self.main_window.geometry("1000x600")
         self.create_menu()
         self.dices = None
         self.must_put_white = False
@@ -41,22 +44,27 @@ class GUI:
         self.information_move_ai = ""
 
     def reset_data(self):
-        self.backgammon = backgammon.Backgammon()
+        """
+        reset G.U.I. for a new game
+        :return: nothing
+        """
+        self.backgammon.reset()
         self.dices = [0, 0]
         self.must_put_white = False
         self.must_put_black = False
         self.round = 0
         self.ai_white = False
         self.ai_black = False
-        self.tura = "NEGRU" if tui_game.fortune.decides_who_start() else "ALB"
+        self.tura = "NEGRU" if logic_of_game.fortune.decides_who_start() else "ALB"
         self.information_move_ai = ""
 
     def create_menu(self):
-        # Menu Bar
-        menu_bar = tk.Menu(self.root)
-        self.root.config(menu=menu_bar)
-
-        # Game Menu
+        """
+        Create a menu for selecting type of game
+        :return: nothing
+        """
+        menu_bar = tk.Menu(self.main_window)
+        self.main_window.config(menu=menu_bar)
         game_menu = tk.Menu(menu_bar, tearoff=0)
         menu_bar.add_cascade(label="MENIU", menu=game_menu)
         game_menu.add_command(label="OM vs OM", command=self.start_human_vs_human)
@@ -65,14 +73,23 @@ class GUI:
         game_menu.add_command(label="EXIT", command=self.quit_game)
 
     def start_human_vs_human(self):
+        """
+        Start human vs human game
+        Reset data from precedent game
+        Build interface
+        :return: nothing
+        """
         self.reset_data()
         print(self.dices)
-        # Add your code to start a human vs AI game here
         self.build_infrastructure()
 
     def draw_table(self, frame_table):
+        """
+        Draw backgammon table
+        :param frame_table: where to draw table
+        :return: nothing
+        """
         self.table_canvas = tk.Canvas(frame_table, width=600, height=600, bg="coral")
-
         for i in range(12):
             x = 600 - ((i + 1) * 50)
             y = 0
@@ -105,26 +122,38 @@ class GUI:
             if self.backgammon.tabla[i] > 0:
                 self.table_canvas.create_text(x + 25, y + 75, text=str(abs(self.backgammon.tabla[i])),
                                               font=("Press Start 2P", 20), fill='white')
-
         self.table_canvas.pack(side="left")
 
     def build_table(self):
-        self.backgammon_frame = tk.Frame(self.root)
+        """
+        Build backgammon table
+        :return: nothing
+        """
+        self.backgammon_frame = tk.Frame(self.main_window)
         self.backgammon_frame.pack(side=tk.LEFT)
         self.draw_table(self.backgammon_frame)
 
     def build_control_frame(self):
-        self.control_frame = tk.Frame(self.root)
+        """
+        Build control frame where will be widgets
+        :return: nothing
+        """
+        self.control_frame = tk.Frame(self.main_window)
         self.control_frame.pack()
 
     def build_dice_frame(self):
+        """
+        Build dice frame where will be displayed dices and button to generate new set of dices
+        :return:
+        """
         self.dice_frame = tk.Frame(self.control_frame, width=400, height=100)
         self.dice_frame.pack(side=tk.TOP, pady=5)
 
-    def build_ai_info(self):
-        pass
-
     def build_insert_value(self):
+        """
+        Build frame for inserting input for moving pieces on table, but in AI mode will display a button for confirm AI moves
+        :return: nothing
+        """
         if self.round > 0:
             self.value_frame = tk.Frame(self.control_frame, width=400, height=200)
             self.value_frame.pack(side=tk.BOTTOM, pady=5)
@@ -144,7 +173,6 @@ class GUI:
                 self.entry_label1.grid(row=0, column=0, pady=5)
                 self.entry_value1 = tk.Entry(self.value_frame, font=("Consolas", 12))
                 self.entry_value1.grid(row=0, column=1, pady=5)
-            # Add Button to take the values
             self.take_values_button = tk.Button(self.value_frame, text="Muta", command=self.take_values,
                                                 font=("Press Start 2P", 10))
             self.take_values_button.grid(row=2, column=0, columnspan=2, pady=5)
@@ -156,15 +184,27 @@ class GUI:
             self.take_values_button.grid(row=0, column=0, columnspan=2, pady=5)
 
     def confirm(self):
+        """
+        Prepare variables for human player
+        :return: nothing
+        """
         self.round = 0
         self.dices = [0, 0]
         self.tura = "NEGRU" if self.tura == "ALB" else "ALB"
         self.build_infrastructure()
 
     def build_roll_button(self):
+        """
+        Build roll button if is situation for that
+        Or
+        Display moves made by AI
+        Or
+        Display number of moves for human player
+        :return: nothing
+        """
         if self.round == 0:
             self.roll_button = tk.Button(self.dice_frame, text="DA-I CU ZARUL",
-                                         command=lambda: self.roll_dice(self.dice_label),
+                                         command=self.roll_dice,
                                          font=("Press Start 2P", 14))
             self.roll_button.pack(anchor=tk.CENTER, expand=True, padx=5, pady=5)
         elif self.round == -1:
@@ -177,15 +217,27 @@ class GUI:
             self.roll_button.pack(anchor=tk.CENTER, expand=True, padx=5, pady=5)
 
     def build_dice_label(self):
+        """
+        Display dices
+        :return: nothing
+        """
         string_phrase = "NULL" if self.dices == [0, 0] else str(self.dices[0]) + "  " + str(self.dices[1])
         self.dice_label = tk.Label(self.dice_frame, text="ZARURI DATE = " + string_phrase, font=("Press Start 2P", 12))
         self.dice_label.pack(padx=5, pady=5)
 
     def build_info_frame(self):
+        """
+        Build frame for information section
+        :return: nothing
+        """
         self.info_frame = tk.Frame(self.control_frame, width=400, height=200, bd=5)
         self.info_frame.pack(side=tk.BOTTOM, pady=5)
 
     def build_info_label(self):
+        """
+        Display information about status of game
+        :return: nothing
+        """
         string_info = "RETRASE ALB : " + str(self.backgammon.white_set) + "\n"
         string_info += "RETRASE NEGRU : " + str(self.backgammon.black_set) + "\n"
         string_info += "SCOASE ALB : " + str(self.backgammon.remove_white) + "\n"
@@ -194,18 +246,30 @@ class GUI:
         self.info_label.pack()
 
     def build_turn_frame(self):
+        """
+        Build frame for displaying what player move
+        :return: nothing
+        """
         self.turn_frame = tk.Frame(self.control_frame, width=400, height=150)
         self.turn_frame.pack(side=tk.BOTTOM)
 
     def build_turn_label(self):
+        """
+        Display what player move
+        :return: nothing
+        """
         self.turn_label = tk.Label(self.turn_frame, text="TURA: " + self.tura, font=("Press Start 2P", 14))
         self.turn_label.pack()
 
     def build_infrastructure(self):
+        """
+        Build graphic interface or displaing a message when a player win
+        :return: nothing
+        """
         print(self.backgammon)
         decision = self.backgammon.win_what()
         if isinstance(decision, bool):
-            for widget in self.root.winfo_children():
+            for widget in self.main_window.winfo_children():
                 widget.destroy()
             self.create_menu()
             self.build_table()
@@ -227,8 +291,15 @@ class GUI:
                 messagebox.showinfo("CASTIGATOR", "JUCATORUL NEGRU A CASTIGAT")
 
     def start_human_vs_ai(self):
+        """
+        Start human vs AI game
+        Reset data from precedent game
+        Decides what player is AI
+        Build interface
+        :return: nothing
+        """
         self.reset_data()
-        if tui_game.fortune.decides_who_start():
+        if logic_of_game.fortune.decides_who_start():
             self.ai_black = True
             print("NEGRU AI")
         else:
@@ -236,24 +307,40 @@ class GUI:
             print("ALB AI")
         self.build_infrastructure()
 
-    def roll_dice(self, dice_label):
+    def roll_dice(self):
+        """
+        Simulating roll the dices
+        Calculate the rounds
+        Call update_dice_label()
+        :return: nothing
+        """
         if self.round == 0:
-            dices_s = tui_game.fortune.dices()
+            dices_s = logic_of_game.fortune.dices()
             # print(dices_s)
             self.dices = dices_s
             if dices_s[0] == dices_s[1]:
                 self.round = 4
             else:
                 self.round = 2
-            self.update_dice_label(dice_label)
+            self.update_dice_label()
 
-    def update_dice_label(self, dice_label):
+    def update_dice_label(self):
+        """
+        Rebuild interface
+        If is in human_vs_ai, call AI method to move pieces
+        :return: nothing
+        """
         player = 1 if self.tura == "ALB" else -1
         if (player == 1 and self.ai_white) or (player == -1 and self.ai_black):
             self.move_ai()
         self.build_infrastructure()
 
     def take_values(self):
+        """
+        Take values from moving a piece for human player
+        Call method for moving piece in backgammon table
+        :return: nothing
+        """
         try:
             if (self.tura == "ALB" and not self.must_put_white) or (self.tura == "NEGRU" and not self.must_put_black):
                 value1 = int(self.entry_value1.get())
@@ -269,12 +356,17 @@ class GUI:
                 if value1 < -1 or value1 > 24:
                     messagebox.showerror("Eroare", "Va rugam sa furnizati numere intre -1 si 23")
                 self.put_piece(value1)
-            # Do something with the values, e.g., print them
 
         except ValueError:
             messagebox.showerror("Eroare", "Numere intregi va rugam.")
 
     def put_piece(self, value_1):
+        """
+        Place a removed piece on table
+        Call build_infrastructure() to refresh interface
+        :param value_1: where place the piece
+        :return: nothing
+        """
         player = 1 if self.tura == "ALB" else -1
         print("player", player)
         list_of_possibles = math_moves.where_can_place_piece(self.backgammon, player, self.dices[0], self.dices[1])
@@ -316,6 +408,13 @@ class GUI:
             self.build_infrastructure()
 
     def move_from_to(self, value1, value2):
+        """
+            Move piece on backgammon table
+            Call build_infrastructure() to refresh interface
+            :param value1: from what place move piece
+            :param value2: where we move piece
+            :return: nothing
+            """
         player = 1 if self.tura == "ALB" else -1
         print("player", player)
         if self.dices[0] != self.dices[1]:
@@ -382,13 +481,17 @@ class GUI:
             self.build_infrastructure()
 
     def move_ai(self):
+        """
+        Method for AI player to play the game
+        :return: nothing
+        """
         dices = deepcopy(self.dices)
         self.information_move_ai = ""
         player = 1 if self.tura == "ALB" else -1
         while self.round != 0:
             if (player == 1 and self.backgammon.remove_white != 0) or (
                     player == -1 and self.backgammon.remove_black != 0):
-                list_of_moves = tui_game.math_moves.where_can_place_piece(self.backgammon, player, dices[0], dices[1])
+                list_of_moves = math_moves.where_can_place_piece(self.backgammon, player, dices[0], dices[1])
                 if len(list_of_moves) == 0:
                     self.round = 0
                     self.information_move_ai += "NU A PUTUT PUNE PIESA"
@@ -472,8 +575,11 @@ class GUI:
         self.round = -1
 
     def quit_game(self):
-        # Add your code to handle quitting the game here
-        self.root.destroy()
+        """
+        Close the window and quit the game
+        :return: nothing
+        """
+        self.main_window.destroy()
 
 
 if __name__ == "__main__":
