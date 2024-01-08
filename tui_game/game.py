@@ -1,7 +1,12 @@
-from tui_game import moves_ai_player_black, move_player_black, move_ai_player_white, backgammon, move_player_white, fortune
+from tui_game import moves_ai_player_black, move_player_black, move_ai_player_white, move_player_white
+from logic_of_game import backgammon, fortune
 
 
 def game_h_vs_h():
+    """
+    function used for a human vs human game
+    :return: nothing
+    """
     game = backgammon.Backgammon()
     turn = 0
     start_player = fortune.decides_who_start()
@@ -27,7 +32,12 @@ def game_h_vs_h():
                 move_player_white.move_white(game)
                 turn = -1
 
+
 def game_h_vs_ai():
+    """
+    function used for a human vs AI game
+    :return: nothing
+    """
     game = backgammon.Backgammon()
     establish_ai = fortune.decides_who_start()
     if establish_ai:
