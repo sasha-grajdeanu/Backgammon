@@ -1,14 +1,17 @@
 import random
 
-from tui_game import backgammon as bk
-from tui_game import fortune as frt
-from tui_game import math_moves
-from tui_game import move_piece
+from logic_of_game import backgammon as bk, fortune as frt, math_moves, move_piece
 
 
 def move_ai_white(sit: bk.Backgammon):
+    """
+    method created for the moment when white AI need to move
+    this method treated some special use-case, randomly decide inputs and make move
+    :param sit: current status of backgammon table
+    :return:
+    """
     dice_1, dice_2 = frt.dices()
-    print("zaruri date", dice_1, dice_2)
+    print("given dices", dice_1, dice_2)
     if dice_1 != dice_2:
         sum = 2
     else:
@@ -16,7 +19,7 @@ def move_ai_white(sit: bk.Backgammon):
 
     while sum != 0:
         if isinstance(sit.win_what(), bool):
-            print("sum", sum)
+            print("round", sum)
             print(sit)
             if dice_1 != dice_2:
                 list_of_possible_move = math_moves.available_move(sit, sit.white, dice_1, dice_2)
@@ -24,22 +27,21 @@ def move_ai_white(sit: bk.Backgammon):
                 list_of_possible_move = math_moves.available_move(sit, sit.white, dice_1, dice_2, sum)
             if len(list_of_possible_move) == 0:
                 # blocaj
-                print("BLOCAJ 1")
+                print("BLOCKAGE 1")
                 return -1
             if sit.remove_white != 0:
                 # inseamna ca trebuie sa pun piesa pe tabla in casa adversarului
                 list_of_possible_move_on_adversary = math_moves.where_can_place_piece(sit, sit.white, dice_1, dice_2)
                 print("list", list_of_possible_move_on_adversary)
                 if len(list_of_possible_move_on_adversary) == 0:
-                    print("BLOCAJ 2")
+                    print("BLOCKAGE 2")
                     return -1
                 else:
                     finish = random.choice(list_of_possible_move_on_adversary)
-                    print("decizie", finish)
+                    print("POSITION", finish)
                     result = move_piece.move_piece_on_table(sit, sit.white, list_of_possible_move_on_adversary, finish)
-                    # print("res", result)
                     if isinstance(result, bool):
-                        print("Nu merge")
+                        print("NOT VALID")
                     else:
                         if dice_1 != dice_2:
                             # normal
@@ -56,14 +58,14 @@ def move_ai_white(sit: bk.Backgammon):
                 # mutare normala
                 print(list_of_possible_move)
                 position = random.choice(list(list_of_possible_move.keys()))
-                print(position)
+                print("FROM WHAT POSITION ", position)
                 finish = random.choice(list_of_possible_move[position])
                 print(finish)
-                # print("decizie", finish)
+                print("POSITION WHERE WAS MOVED PIECE ", finish)
                 result = move_piece.move_piece(sit, sit.white, list_of_possible_move, position, finish)
                 # print("res", result)
                 if isinstance(result, bool):
-                    print("Nu merge")
+                    print("NOT VALID")
                 else:
                     if dice_1 != dice_2:
                         if finish != -1:
@@ -93,4 +95,3 @@ def move_ai_white(sit: bk.Backgammon):
                         sum -= (result // dice_1)
         else:
             break
-        # print("CAP de finish")
