@@ -1,9 +1,17 @@
 from copy import deepcopy
-
-from tui_game import backgammon
+from logic_of_game import backgammon
 
 
 def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, double=None):
+    """
+    Method for calculating the available move of a player with dice_1 and dice_2
+    :param situation: current status of backgammon table
+    :param player: player who wants to move
+    :param dice_1: dice 1
+    :param dice_2: dice 2
+    :param double: if dice_1 == dice_2 then need to use other method for calculating the moves
+    :return: dictionary with available moves
+    """
     list_of_possible_moves = dict()
     if player == situation.black:
         if situation.can_remove_piece(situation.black):
@@ -16,13 +24,11 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
                     if dice_2 == 24 - i:
                         dice_2 -= 1
         for i in range(len(situation.tabla)):
-            # print(dice_1, dice_2)
             if situation.tabla[i] < 0:
                 list_of_movement = set()
                 if double is None:
                     list_of_movement.add(i + dice_1)
                     list_of_movement.add(i + dice_2)
-                    # list_of_movement.add(i + dice_1 + dice_2)
                     if i in list_of_movement:
                         list_of_movement.remove(i)
                 else:
@@ -38,7 +44,6 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
                     if situation.can_remove_piece(situation.black):
                         if element > 24:
                             list_of_movement.remove(element)
-                            # flag = True
                         elif element == 24:
                             list_of_movement.remove(element)
                             flag = True
@@ -65,13 +70,11 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
                         dice_2 -= 1
 
         for i in range(len(situation.tabla)).__reversed__():
-            # print(dice_1, dice_2)
             if situation.tabla[i] > 0:
                 list_of_movement = set()
                 if double is None:
                     list_of_movement.add(i - dice_1)
                     list_of_movement.add(i - dice_2)
-                    # list_of_movement.add(i - dice_1 - dice_2)
                     if i in list_of_movement:
                         list_of_movement.remove(i)
                 else:
@@ -86,7 +89,6 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
                     if situation.can_remove_piece(situation.white):
                         if element < -1:
                             list_of_movement.remove(element)
-                            # flag = True
                         elif element == -1:
                             list_of_movement.remove(element)
                             flag = True
@@ -105,6 +107,15 @@ def available_move(situation: backgammon.Backgammon, player, dice_1, dice_2, dou
 
 
 def where_can_place_piece(situation: backgammon.Backgammon, player, dice_1, dice_2):
+    """
+    Used when the player have pieces removed by the opponent
+    Method for calculating the available movements
+    :param situation: situation: current status of backgammon table
+    :param player: player who wants to move
+    :param dice_1: dice 1
+    :param dice_2: dice 2
+    :return: a list with the available movements
+    """
     list_of_possible_place = set()
     if player == situation.white:
         list_of_possible_place.add(24 - dice_1)
