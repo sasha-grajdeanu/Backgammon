@@ -270,7 +270,10 @@ class GUI:
         Display what player move
         :return: nothing
         """
-        self.turn_label = tk.Label(self.turn_frame, text="TURA: " + self.tura, font=("Press Start 2P", 14))
+        message = self.tura
+        if (self.ai_white and self.tura =="ALB") or (self.ai_black and self.tura == "NEGRU"):
+            message += " [A.I.]"
+        self.turn_label = tk.Label(self.turn_frame, text="TURA: " + message, font=("Press Start 2P", 14))
         self.turn_label.pack()
 
     def build_infrastructure(self):
