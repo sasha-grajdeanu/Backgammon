@@ -151,7 +151,8 @@ class GUI:
 
     def build_insert_value(self):
         """
-        Build frame for inserting input for moving pieces on table, but in AI mode will display a button for confirm AI moves
+        Build frame for inserting input for moving pieces on table,
+        but in AI mode will display a button for confirm AI moves
         :return: nothing
         """
         if self.round > 0:
