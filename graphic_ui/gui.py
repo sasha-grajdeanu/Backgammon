@@ -93,35 +93,46 @@ class GUI:
         for i in range(12):
             x = 600 - ((i + 1) * 50)
             y = 0
-            self.table_canvas.create_rectangle(x, y, x + 50, y + 50, outline='black', fill='chocolate4')
-            self.table_canvas.create_text(x + 25, y + 30, text=str(i),
-                                          font=("Press Start 2P", 15), fill='white')
+            if i in [j for j in range(0, 6)]:
+                self.table_canvas.create_rectangle(x, y, x + 50, y + 50, outline='black', fill='gray90')
+                self.table_canvas.create_text(x + 25, y + 30, text=str(i),
+                                              font=("Press Start 2P", 15), fill='black')
+            else:
+                self.table_canvas.create_rectangle(x, y, x + 50, y + 50, outline='black', fill='chocolate4')
+                self.table_canvas.create_text(x + 25, y + 30, text=str(i),
+                                              font=("Press Start 2P", 15), fill='white')
             if i % 2 == 0:
                 self.table_canvas.create_rectangle(x, y + 50, x + 50, y + 200, outline='black', fill='darkgoldenrod')
             else:
                 self.table_canvas.create_rectangle(x, y + 50, x + 50, y + 200, outline='black', fill='chocolate3')
             if self.backgammon.tabla[i] < 0:
                 self.table_canvas.create_text(x + 25, y + 125, text=str(abs(self.backgammon.tabla[i])),
-                                              font=("Press Start 2P", 20), fill='black')
+                                              font=("Press Start 2P", 20), fill='gray20')
             if self.backgammon.tabla[i] > 0:
                 self.table_canvas.create_text(x + 25, y + 125, text=str(abs(self.backgammon.tabla[i])),
-                                              font=("Press Start 2P", 20), fill='white')
+                                              font=("Press Start 2P", 20), fill='gray90')
         for i in range(12, 24):
             x = 0 + ((i - 12) * 50)
             y = 375
-            self.table_canvas.create_rectangle(x, y + 150, x + 50, y + 200, outline='black', fill='chocolate4')
-            self.table_canvas.create_text(x + 25, y + 180, text=str(i),
-                                          font=("Press Start 2P", 15), fill='white')
+            if i in [j for j in range(18, 24)]:
+                self.table_canvas.create_rectangle(x, y + 150, x + 50, y + 200, outline='black', fill='gray20')
+                self.table_canvas.create_text(x + 25, y + 180, text=str(i),
+                                              font=("Press Start 2P", 15), fill='white')
+            else:
+                self.table_canvas.create_rectangle(x, y + 150, x + 50, y + 200, outline='black', fill='chocolate4')
+                self.table_canvas.create_text(x + 25, y + 180, text=str(i),
+                                              font=("Press Start 2P", 15), fill='white')
+
             if i % 2 == 0:
                 self.table_canvas.create_rectangle(x, y, x + 50, y + 150, outline='black', fill='darkgoldenrod')
             else:
                 self.table_canvas.create_rectangle(x, y, x + 50, y + 150, outline='black', fill='chocolate3')
             if self.backgammon.tabla[i] < 0:
                 self.table_canvas.create_text(x + 25, y + 75, text=str(abs(self.backgammon.tabla[i])),
-                                              font=("Press Start 2P", 20), fill='black')
+                                              font=("Press Start 2P", 20), fill='gray20')
             if self.backgammon.tabla[i] > 0:
                 self.table_canvas.create_text(x + 25, y + 75, text=str(abs(self.backgammon.tabla[i])),
-                                              font=("Press Start 2P", 20), fill='white')
+                                              font=("Press Start 2P", 20), fill='gray90')
         self.table_canvas.pack(side="left")
 
     def build_table(self):
